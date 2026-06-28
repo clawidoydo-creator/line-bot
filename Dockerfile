@@ -16,3 +16,4 @@ EXPOSE 8080
 
 # 啟動應用程式
 CMD [ "node", "index.js" ]
+
