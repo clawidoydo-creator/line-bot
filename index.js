@@ -29,7 +29,7 @@ const KINSHIP_TO_TAG = {
 
 // 初始化 GCP Firestore (替代 Cloudflare KV)
 // 備註：使用前需在 GCP 後台啟用 Firestore (Native mode)
-const db = new Firestore();
+// const db = new Firestore();
 
 // ====== 🚀 接收 LINE Webhook 的主要路由 ======
 app.post('/', async (req, res) => {
@@ -186,30 +186,13 @@ function verifyLineSignature(body, signature, channelSecret) {
 
 // ========================= Firestore Cache (替代 KV) =========================
 async function getMemberCache(chatId) {
-  try {
-    const docRef = db.collection('line_member_cache').doc(chatId);
-    const doc = await docRef.get();
-    if (!doc.exists) return { byId: {}, byTag: {} };
-    const x = doc.data();
-    return { byId: x?.byId || {}, byTag: x?.byTag || {} };
-  } catch {
-    return { byId: {}, byTag: {} };
-  }
+  // 直接回傳空快取，不讀取資料庫
+  return { byId: {}, byTag: {} };
 }
 
 async function cacheGroupMember(chatId, userId, displayName) {
-  if (!chatId || !userId) return;
-  const cache = await getMemberCache(chatId);
-  const safeName = sanitizeDisplayNameForTag(displayName);
-  cache.byId[userId] = safeName || displayName || "神祕成員";
-  if (safeName) { cache.byTag[`@${safeName}`] = userId; }
-  
-  try {
-    const docRef = db.collection('line_member_cache').doc(chatId);
-    await docRef.set(cache);
-  } catch (err) {
-    console.error("Firestore 寫入失敗:", err);
-  }
+  // 暫時什麼都不做，不寫入資料庫
+  return;
 }
 
 // ========================= 輔助函式 (保持不變) =========================
