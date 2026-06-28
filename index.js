@@ -431,4 +431,3 @@ function splitTextByLength(text, maxLen = 4500) {
 app.listen(PORT, () => {
   console.log(`LINE Bot 伺服器已在 Port ${PORT} 啟動`);
 });
-});
